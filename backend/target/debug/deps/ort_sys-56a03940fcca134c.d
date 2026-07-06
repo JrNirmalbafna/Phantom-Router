@@ -1,0 +1,9 @@
+C:\Users\NIRMAL BAFNA\.gemini\antigravity-ide\scratch\phantom-router\backend\target\debug\deps\ort_sys-56a03940fcca134c.d: C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\lib.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\internal\mod.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\internal\dirs.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\stub.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\version.rs
+
+C:\Users\NIRMAL BAFNA\.gemini\antigravity-ide\scratch\phantom-router\backend\target\debug\deps\libort_sys-56a03940fcca134c.rmeta: C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\lib.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\internal\mod.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\internal\dirs.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\stub.rs C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\version.rs
+
+C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\lib.rs:
+C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\internal\mod.rs:
+C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\internal\dirs.rs:
+C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\stub.rs:
+C:\Users\NIRMAL\ BAFNA\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\ort-sys-2.0.0-rc.12\src\version.rs:

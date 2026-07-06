@@ -1,0 +1,18 @@
+cargo:rustc-check-cfg=cfg(link_error)
+cargo:rerun-if-env-changed=ORT_LIB_PATH
+cargo:rerun-if-env-changed=ORT_LIB_LOCATION
+cargo:rerun-if-env-changed=CARGO_NET_OFFLINE
+cargo:rerun-if-env-changed=ORT_SKIP_DOWNLOAD
+cargo:rerun-if-env-changed=ORT_OFFLINE
+[ort-sys] [DEBUG] Using prebuilt binaries
+[ort-sys] [DEBUG] looking for prebuilt binaries matching feature set: none
+cargo:rerun-if-env-changed=ORT_CXX_STDLIB
+cargo:rerun-if-env-changed=CXXSTDLIB
+cargo:rustc-link-lib=dxguid
+cargo:rustc-link-lib=DXCORE
+cargo:rustc-link-lib=DXGI
+cargo:rustc-link-lib=D3D12
+cargo:rustc-link-lib=DirectML
+cargo:warning=[ort-sys] [WARN] had to copy dylibs because Windows Developer Mode is not enabled, or the cache dir is on a different drive. examples & tests will not be able to access the dylibs
+cargo:rustc-link-search=native=C:\Users\NIRMAL BAFNA\AppData\Local\ort.pyke.io\dfbin\x86_64-pc-windows-msvc\b685bfc8d336e0ba95c066a7a982c03aa6dedd528a492eb99ca4ccb7f3af9e7a
+cargo:rustc-link-lib=static=onnxruntime

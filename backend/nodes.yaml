@@ -1,0 +1,24 @@
+nodes:
+  - id: "NODE_ALPHA"
+    weight: 1.0
+    region: "us-east-1"
+  - id: "NODE_BETA"
+    weight: 1.0
+    region: "us-west-2"
+  - id: "NODE_GAMMA"
+    weight: 1.0
+    region: "eu-central-1"
+  - id: "NODE_DELTA"
+    weight: 1.0
+    region: "ap-southeast-1"
+  - id: "NODE_EPSILON"
+    weight: 1.0
+    region: "us-east-2"
+
+settings:
+  ws_port: 9001
+  proxy_port: 8080
+  metrics_port: 2112
+  broadcast_interval_ms: 500
+  circuit_breaker_threshold: 5
+  circuit_breaker_timeout_s: 10

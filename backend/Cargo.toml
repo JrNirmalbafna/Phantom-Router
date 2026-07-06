@@ -1,0 +1,30 @@
+[package]
+name = "phantom-router"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+hyper = { version = "1", features = ["full"] }
+hyper-util = { version = "0.1", features = ["client-legacy", "full"] }
+http-body-util = "0.1"
+crossbeam = "0.8"
+dashmap = "5.5"
+petgraph = "0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "0.9"
+notify = "6.1"
+metrics = "0.22"
+metrics-exporter-prometheus = "0.13"
+ort = "2.0.0-rc.0"
+ndarray = "0.16"
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tokio-tungstenite = "0.24"
+futures-util = "0.3"
+serde_json = "1.0"
+rand = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.23.4", features = ["v4"] }
+ordered-float = "5.3.0"
