@@ -220,12 +220,42 @@ fn broadcast(state: &AppState) {
     }
     if total > 0.0 { for b in &mut buckets { *b = (*b / total) * 100.0; } }
 
+    // Decision Engine Simulated Telemetry
+    let mut rng = rand::thread_rng();
+    let stress = all_nodes.iter().any(|n| n.stress_ticks > 0);
+    
+    // Simulate dynamic decision outcomes
+    let total_reqs = global_rps as u64;
+    let dropped = if stress { rng.gen_range(50..300) } else { rng.gen_range(0..5) };
+    let fallback = if stress { rng.gen_range(100..500) } else { rng.gen_range(5..20) };
+    let hedged = if stress { rng.gen_range(500..2000) } else { rng.gen_range(50..200) };
+    let clean = total_reqs.saturating_sub(dropped + fallback + hedged);
+
+    let decision_telemetry = serde_json::json!({
+        "active_strategy": "Hybrid ML",
+        "hedging_rate": (hedged as f64 / total_reqs.max(1) as f64) * 100.0,
+        "confidence_avg": if stress { rng.gen_range(75.0..88.0) } else { rng.gen_range(92.0..98.0) },
+        "requests_optimized": 15842 + (chrono::Utc::now().timestamp() % 1000) * 12,
+        "strategy_distribution": {
+            "Hybrid": rng.gen_range(60..70),
+            "LowestLatency": rng.gen_range(20..30),
+            "RoundRobin": rng.gen_range(5..10)
+        },
+        "outcomes": {
+            "clean": clean,
+            "hedged": hedged,
+            "fallback": fallback,
+            "dropped": dropped
+        }
+    });
+
     let payload = serde_json::json!({
         "timestamp": chrono::Utc::now().timestamp_millis(),
         "nodes": nodes,
         "decisions": state.history.get_recent_decisions(),
         "global_rps": global_rps,
         "latency_histogram": buckets,
+        "decision_telemetry": decision_telemetry,
     });
 
     if let Ok(json) = serde_json::to_string(&payload) {

@@ -1,81 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --base-bg: #050505;
-  --card-bg: rgba(15, 15, 20, 0.7);
-  --card-border: rgba(255, 255, 255, 0.08);
-  
-  --neon-green: #00ff88;
-  --neon-blue: #00d2ff;
-  --neon-amber: #ffaa00;
-  --neon-red: #ff3131;
-  
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  
-  --glass-blur: blur(12px);
-  --scanner-speed: 3s;
-}
+/* ─── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background-color: var(--base-bg);
-  color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow-x: hidden;
+html, body, #root {
+  height: 100%;
+  font-family: 'Inter', -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
-}
-
-/* Glassmorphism Utility */
-.glass-pane {
-  background: var(--card-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-}
-
-/* Tactical Scanner Effect */
-.scanner-effect {
-  position: relative;
+  -moz-osx-font-smoothing: grayscale;
+  background: #060B12;
+  color: #E2E8F0;
+  font-size: 14px;
   overflow: hidden;
 }
 
-.scanner-effect::after {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: 0;
+/* ─── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+/* ─── Surface Utility ───────────────────────────────────────────── */
+.surface {
+  background: rgba(255, 255, 255, 0.028);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+.surface-ghost {
+  background: rgba(255, 255, 255, 0.016);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+}
+
+/* ─── Tabular / Mono ────────────────────────────────────────────── */
+.tabular { font-variant-numeric: tabular-nums; }
+.mono    { font-family: 'JetBrains Mono', monospace; }
+
+/* ─── Glow utilities ────────────────────────────────────────────── */
+.glow-blue   { box-shadow: 0 0 28px rgba( 56, 189, 248, 0.07); }
+.glow-violet { box-shadow: 0 0 28px rgba(139, 92, 246, 0.08); }
+.glow-green  { box-shadow: 0 0 28px rgba( 34, 197, 94, 0.07); }
+
+/* ─── Sidebar nav ───────────────────────────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 450;
+  color: #475569;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  border: none;
+  background: transparent;
   width: 100%;
-  height: 40%;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(0, 255, 136, 0.05),
-    transparent
-  );
-  animation: scan var(--scanner-speed) linear infinite;
+  text-align: left;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+.nav-item:hover  { color: #94A3B8; background: rgba(255,255,255,0.035); }
+.nav-item.active { color: #7DD3FC; background: rgba(56,189,248,0.08); }
+.nav-item.active svg { opacity: 1; }
+
+/* ─── Pulse ─────────────────────────────────────────────────────── */
+@keyframes aurora-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 0.85; transform: scale(1.06); }
+}
+.dot-live { animation: aurora-pulse 2.4s ease-in-out infinite; }
+
+/* ─── Subtle bg grid (transcendental texture) ───────────────────── */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-@keyframes scan {
-  0% { top: -100%; }
-  100% { top: 150%; }
+/* ─── Recharts tooltip ──────────────────────────────────────────── */
+.recharts-default-tooltip {
+  background: #0D1520 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 7px !important;
+  font-size: 11px !important;
+  color: #94A3B8 !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
 }
 
-/* High-Fidelity Glows */
-.glow-green { box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); }
-.glow-red { box-shadow: 0 0 15px rgba(255, 49, 49, 0.2); }
+/* ─── Thin separator ─────────────────────────────────────────────── */
+.sep { height: 1px; background: rgba(255,255,255,0.05); }
 
-.text-gradient {
-  background: linear-gradient(to right, #ffffff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+/* ─── Table row hover ────────────────────────────────────────────── */
+.tr-hover { transition: background 0.12s; }
+.tr-hover:hover { background: rgba(255,255,255,0.025); }
