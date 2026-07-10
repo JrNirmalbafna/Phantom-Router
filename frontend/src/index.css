@@ -100,3 +100,23 @@ html, body, #root {
 /* ─── Table row hover ────────────────────────────────────────────── */
 .tr-hover { transition: background 0.12s; }
 .tr-hover:hover { background: rgba(255,255,255,0.025); }
+
+/* ─── Decision Engine: pipeline flow animation ───────────────────── */
+@keyframes flowPulse {
+  0%   { transform: translateX(-120%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(220%); opacity: 0; }
+}
+
+/* ─── Node switcher dropdown slide-in ───────────────────────────── */
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Generic pulsing dot ───────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  Activity, Clock, AlertOctagon, Heart, ChevronDown, RefreshCw, MoreHorizontal,
+  Activity, Clock, ChevronDown, RefreshCw, MoreHorizontal,
   ChevronRight, CheckCircle2, AlertTriangle, ArrowUpRight, ArrowDownRight,
-  ShieldAlert, Radio, Server, Network
+  ShieldAlert, ChevronUp
 } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, YAxis, LineChart, Line } from 'recharts';
 import type { NodeStats } from '../hooks/usePhantomSocket';
@@ -76,11 +76,113 @@ const MiniChart: React.FC<{ title: string; value: string; data: number[]; color:
   );
 };
 
+/* ─── Node Switcher Dropdown ──────────────────── */
+const NodeSwitcher: React.FC<{
+  currentNode: NodeStats;
+  allNodes: NodeStats[];
+  onSelect: (id: string) => void;
+}> = ({ currentNode, allNodes, onSelect }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const hColor = (h: number) => h >= 90 ? '#22C55E' : h >= 70 ? '#F59E0B' : '#F87171';
+
+  return (
+    <div ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.10)',
+          borderRadius: 8, padding: '3px 10px 3px 12px',
+          cursor: 'pointer', color: '#E2E8F0', fontSize: 12,
+          fontWeight: 500, transition: 'all 0.15s ease',
+          outline: 'none',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+        onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
+      >
+        <span
+          style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: hColor(currentNode.health),
+            boxShadow: `0 0 6px ${hColor(currentNode.health)}`,
+            flexShrink: 0,
+          }}
+        />
+        {currentNode.id}
+        {open ? <ChevronUp size={13} color="#64748B" /> : <ChevronDown size={13} color="#64748B" />}
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: 'absolute', top: 'calc(100% + 6px)', left: 0,
+            background: '#111827', border: '1px solid rgba(255,255,255,0.10)',
+            borderRadius: 10, overflow: 'hidden', zIndex: 100,
+            minWidth: 200,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+            animation: 'fadeSlideDown 0.12s ease forwards',
+          }}
+        >
+          <div style={{ padding: '6px 8px 4px', fontSize: 10, color: '#475569', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 8, marginBottom: 4 }}>
+            Switch Node
+          </div>
+          {allNodes.map(n => {
+            const isActive = n.id === currentNode.id;
+            const hc = hColor(n.health);
+            return (
+              <button
+                key={n.id}
+                onClick={() => { onSelect(n.id); setOpen(false); }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  width: '100%', padding: '8px 14px',
+                  background: isActive ? 'rgba(56,189,248,0.08)' : 'transparent',
+                  border: 'none', cursor: 'pointer',
+                  transition: 'background 0.12s ease',
+                  outline: 'none',
+                }}
+                onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: hc, boxShadow: `0 0 5px ${hc}`, flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, color: isActive ? '#38BDF8' : '#CBD5E1', fontWeight: isActive ? 600 : 400 }}>
+                    {n.id}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 10, color: '#64748B' }}>{Math.round(n.rps).toLocaleString()} rps</span>
+                  <span style={{ fontSize: 10, color: hc, fontWeight: 600 }}>{Math.round(n.health)}%</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 /* ─── Main Component ──────────────────────────── */
 
-interface Props { node: NodeStats | null; }
+interface Props {
+  node: NodeStats | null;
+  allNodes: NodeStats[];
+  onSelectNode: (id: string) => void;
+}
 
-const NodeAnalytics: React.FC<Props> = ({ node }) => {
+const NodeAnalytics: React.FC<Props> = ({ node, allNodes, onSelectNode }) => {
   const [hist, setHist] = useState<{ rps: number; lat: number; err: number; hlth: number; fp: number; cpu: number; mem: number }[]>([]);
 
   useEffect(() => {
@@ -99,6 +201,15 @@ const NodeAnalytics: React.FC<Props> = ({ node }) => {
     });
   }, [node]);
 
+  // Reset history when node changes
+  const prevNodeId = useRef<string | null>(null);
+  useEffect(() => {
+    if (node && node.id !== prevNodeId.current) {
+      setHist([]);
+      prevNodeId.current = node.id;
+    }
+  }, [node?.id]);
+
   if (!node) {
     return <div className="p-8 text-slate-400">Select a node from the Overview to view analytics.</div>;
   }
@@ -111,24 +222,30 @@ const NodeAnalytics: React.FC<Props> = ({ node }) => {
       {/* ─── Header ─── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
+          {/* Breadcrumb with Node Switcher */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#64748B', marginBottom: 8 }}>
-            <span style={{ color: '#38BDF8', cursor: 'pointer' }}>Nodes</span>
+            <span style={{ color: '#38BDF8', cursor: 'pointer' }} onClick={() => {}}>Nodes</span>
             <ChevronRight size={14} />
-            <span style={{ color: '#E2E8F0' }}>{node.id}</span>
+            {/* ↓ Interactive node switcher replaces static text */}
+            <NodeSwitcher
+              currentNode={node}
+              allNodes={allNodes}
+              onSelect={onSelectNode}
+            />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <h1 style={{ fontSize: 24, fontWeight: 600, color: '#F8FAFC', letterSpacing: '-0.02em' }}>{node.id}</h1>
             <div style={{ background: `${hColor}15`, border: `1px solid ${hColor}30`, padding: '2px 8px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: hColor, boxShadow: `0 0 8px ${hColor}` }} />
-              <span style={{ fontSize: 11, color: hColor, fontWeight: 500 }}>{node.health >= 90 ? 'Healthy' : 'Degraded'}</span>
+              <span style={{ fontSize: 11, color: hColor, fontWeight: 500 }}>{node.health >= 90 ? 'Healthy' : node.health >= 70 ? 'Degraded' : 'Critical'}</span>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 11, color: '#94A3B8', marginTop: 8 }}>
-            <span>10.0.0.1:8080</span>
+            <span>10.0.0.{allNodes.findIndex(n => n.id === node.id) + 1}:8080</span>
             <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#475569' }} />
             <span>Backend Server</span>
             <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#475569' }} />
-            <span>Added 14 days ago</span>
+            <span>Circuit: <span style={{ color: node.circuit_state === 'OPEN' ? '#F87171' : '#22C55E', fontWeight: 500 }}>{node.circuit_state}</span></span>
           </div>
         </div>
         
@@ -229,7 +346,6 @@ const NodeAnalytics: React.FC<Props> = ({ node }) => {
             <div style={{ position: 'relative', width: 140, height: 140, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="140" height="140" viewBox="0 0 140 140" style={{ transform: 'rotate(-225deg)' }}>
                 <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="12" strokeDasharray="282 377" strokeLinecap="round" />
-                {/* Arc color based on load: Green -> Yellow -> Red */}
                 <circle cx="70" cy="70" r="60" fill="none" stroke={node.dna.queue_depth > 40 ? "#F59E0B" : "#22C55E"} strokeWidth="12" strokeDasharray={`${Math.min((node.dna.queue_depth/100) * 282, 282)} 377`} strokeLinecap="round" style={{ transition: 'all 0.5s ease' }} />
               </svg>
               <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 10 }}>

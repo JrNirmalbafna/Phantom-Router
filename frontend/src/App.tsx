@@ -6,6 +6,7 @@ import ChartsRow from './components/ChartsRow';
 import DecisionsTable from './components/DecisionsTable';
 import NodeAnalytics from './components/NodeAnalytics';
 import DecisionEngine from './components/DecisionEngine';
+import LiveTraffic from './components/LiveTraffic';
 import { usePhantomSocket } from './hooks/usePhantomSocket';
 import type { NodeStats } from './hooks/usePhantomSocket';
 
@@ -133,10 +134,17 @@ function App() {
             }}
           />
         );
-      case 'nodes':
+      case 'nodes': {
         const selectedNode = data?.nodes.find(n => n.id === selectedNodeId) || (data?.nodes[0] ?? null);
-        return <NodeAnalytics node={selectedNode} />;
-      case 'traffic':   return <PlaceholderPage title="Live Traffic" />;
+        return (
+          <NodeAnalytics
+            node={selectedNode}
+            allNodes={data?.nodes || []}
+            onSelectNode={(id) => setSelectedNodeId(id)}
+          />
+        );
+      }
+      case 'traffic':   return <LiveTraffic data={data} />;
       case 'decisions': return <DecisionEngine data={data} />;
       case 'predictor': return <PlaceholderPage title="AI Predictor" />;
       case 'benchmark': return <PlaceholderPage title="Benchmark Center" />;
